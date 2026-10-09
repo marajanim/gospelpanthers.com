@@ -1,0 +1,22 @@
+# Only the custom GOPA application code belongs in this repository.
+/*
+!/.gitignore
+!/README.md
+!/wp-content/
+/wp-content/*
+!/wp-content/themes/
+/wp-content/themes/*
+!/wp-content/themes/gopa/
+!/wp-content/mu-plugins/
+/wp-content/mu-plugins/*
+!/wp-content/mu-plugins/gopa-content.php
+
+# Never commit local configuration, databases, logs, or credentials.
+**/.env
+**/.env.*
+**/wp-config.php
+**/*.sql
+**/*.sql.gz
+**/*.zip
+**/debug.log
+**/.DS_Store
