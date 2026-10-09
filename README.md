@@ -17,7 +17,7 @@ Push reviewed changes to `main` in this repository. Intekhost checks the branch 
 
 The deployment checks PHP syntax, requires a fast-forward update, prevents overlapping runs and backs up replaced code before publishing it. It leaves the WordPress database, configuration and Media Library untouched. Admin content changes are immediate and do not need a Git commit.
 
-The hosting Scheduled Tasks entry runs `/usr/bin/php82 /home/sites/39b/a/a8113db85a/gopa-git/deploy.php` every five minutes. Its output is stored outside the website in `gopa-deploy.log`; code backups are in `gopa-deploy-backups/`. The deployed commit can be checked at https://www.gospelpanthers.com/wp-content/themes/gopa/deployment.json.
+The hosting Scheduled Tasks entry runs `/usr/bin/php82 /home/sites/39b/a/a8113db85a/gopa-git/deploy.php` every five minutes. Code backups are stored outside the website in `gopa-deploy-backups/`. The deployed commit can be checked at https://www.gospelpanthers.com/wp-content/themes/gopa/deployment.json.
 
 To restore an earlier code change, revert its Git commit and push the revert to `main`. To pause automatic publishing, disable the GOPA entry in hosting Scheduled Tasks.
 
