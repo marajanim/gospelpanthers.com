@@ -2,6 +2,7 @@
 /*
 !/.gitignore
 !/README.md
+!/deploy.php
 !/wp-content/
 /wp-content/*
 !/wp-content/themes/
