@@ -12,6 +12,7 @@ add_action('after_setup_theme', function () {
 add_action('wp_enqueue_scripts', function () {
     wp_enqueue_style('gopa', get_theme_file_uri('assets/site.css'), [], filemtime(get_theme_file_path('assets/site.css')));
     wp_enqueue_style('gopa-design', get_theme_file_uri('assets/design.css'), ['gopa'], filemtime(get_theme_file_path('assets/design.css')));
+    if (is_page('about-us')) wp_enqueue_style('gopa-about', get_theme_file_uri('assets/about.css'), ['gopa-design'], filemtime(get_theme_file_path('assets/about.css')));
     wp_enqueue_script('gopa', get_theme_file_uri('assets/site.js'), [], filemtime(get_theme_file_path('assets/site.js')), true);
 });
 function gopa_url($slug) { $page=get_page_by_path($slug); return $page ? get_permalink($page) : home_url('/'.$slug.'/'); }
