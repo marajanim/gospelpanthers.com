@@ -11,6 +11,7 @@ define('FS_METHOD', 'direct');
 require $root.'/wp-load.php';
 if (!in_array(wp_parse_url(home_url(), PHP_URL_HOST), ['www.gospelpanthers.com','gospelpanthers.com','gopa.local'], true)) throw new RuntimeException('Unexpected WordPress site.');
 if (get_option('gopa_store_ready') === '2026-10-v1') { echo "GOPA store migration already complete.\n"; exit; }
+require_once ABSPATH.'wp-admin/includes/admin.php';
 require_once ABSPATH.'wp-admin/includes/plugin.php';
 require_once ABSPATH.'wp-admin/includes/plugin-install.php';
 require_once ABSPATH.'wp-admin/includes/class-wp-upgrader.php';
