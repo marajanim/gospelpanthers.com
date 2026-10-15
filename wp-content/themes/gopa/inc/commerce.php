@@ -33,6 +33,9 @@ add_shortcode('gopa_donation', function () {
     </form>
     <?php return ob_get_clean();
 });
+add_action('template_redirect', function () {
+    if (is_page('donate') || (function_exists('is_cart') && (is_cart() || is_checkout() || is_account_page()))) nocache_headers();
+}, 0);
 // Keep old bookmarks useful; the original editable combined page is retained.
 add_action('template_redirect', function () {
     if (is_page('events-resources') && get_page_by_path('events')) { wp_safe_redirect(gopa_url('events'), 301); exit; }

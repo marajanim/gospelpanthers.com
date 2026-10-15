@@ -35,6 +35,7 @@ foreach (['woocommerce'=>'woocommerce/woocommerce.php','woocommerce-gateway-stri
 if ($new_woocommerce) {
     update_option('woocommerce_currency','GBP');
     update_option('woocommerce_default_country','GB');
+    update_option('woocommerce_coming_soon','no');
 }
 if ($plugins_changed) {
     // Re-bootstrap so both plugins receive their normal init lifecycle.
