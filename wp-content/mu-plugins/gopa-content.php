@@ -3,6 +3,38 @@
  * Description: Permanent mission collections and private, admin-managed enquiries. Independent of the active theme.
  */
 defined('ABSPATH') || exit;
+// Add the sixth field once, then leave all copy/images under normal admin control.
+add_action('init', function () {
+    if (get_option('gopa_cyber_field_v1') || !post_type_exists('gopa_field')) return;
+    if (!add_option('gopa_cyber_field_lock', time(), '', false)) return;
+    try {
+        $field = get_page_by_path('cyber', OBJECT, 'gopa_field');
+        if (!$field) {
+            $description = 'Working spirit-filled disciples to reach online users worldwide.';
+            $id = wp_insert_post(['post_type'=>'gopa_field','post_status'=>'publish','post_title'=>'CYBER','post_name'=>'cyber','menu_order'=>5,'post_excerpt'=>$description,'post_content'=>'<!-- wp:paragraph --><p>'.$description.'</p><!-- /wp:paragraph -->'], true);
+            if (is_wp_error($id)) return;
+            update_post_meta($id, 'gopa_label', '06 / Mission field');
+            update_post_meta($id, 'gopa_button', 'Explore');
+            $images = get_posts(['post_type'=>'attachment','post_status'=>'inherit','numberposts'=>1,'meta_query'=>[['key'=>'_wp_attached_file','value'=>'gopa-campaign-calling.jpg','compare'=>'LIKE']]]);
+            if ($images) set_post_thumbnail($id, $images[0]->ID);
+        }
+        $home_id = (int)get_option('page_on_front');
+        $home = get_post($home_id);
+        if ($home) {
+            $content = preg_replace_callback('/\[gopa_collection\b[^\]]*\]/', function ($match) {
+                if (!preg_match('/\btype=["\x27]gopa_field["\x27]/', $match[0])) return $match[0];
+                return preg_replace('/\blimit=["\x27]5["\x27]/', 'limit="6"', $match[0]);
+            }, $home->post_content);
+            $content = str_replace('Five mission fields.', 'Six mission fields.', $content);
+            if ($content !== $home->post_content) {
+                wp_save_post_revision($home_id);
+                $updated = wp_update_post(['ID'=>$home_id,'post_content'=>wp_slash($content)], true);
+                if (is_wp_error($updated)) return;
+            }
+        }
+        update_option('gopa_cyber_field_v1', true, false);
+    } finally { delete_option('gopa_cyber_field_lock'); }
+}, 20);
 add_action('init',function(){
     foreach(['field'=>['Mission fields','Mission field','dashicons-admin-site-alt3'],'course'=>['Academy courses','Academy course','dashicons-welcome-learn-more'],'event'=>['Events','Event','dashicons-calendar-alt'],'resource'=>['Resources','Resource','dashicons-book-alt'],'hub'=>['Panther hubs','Panther hub','dashicons-location-alt']] as $key=>$v){
         register_post_type('gopa_'.$key,['labels'=>['name'=>$v[0],'singular_name'=>$v[1],'add_new_item'=>'Add '.$v[1],'edit_item'=>'Edit '.$v[1]],'public'=>true,'show_in_rest'=>true,'menu_icon'=>$v[2],'supports'=>['title','editor','excerpt','thumbnail','page-attributes','revisions'],'has_archive'=>false,'rewrite'=>['slug'=>$key==='field'?'mission':$key.'s']]);

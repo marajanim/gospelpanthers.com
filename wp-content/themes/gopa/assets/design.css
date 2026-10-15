@@ -27,3 +27,9 @@ body{background:var(--paper)}h1,h2,h3{font-family:Jost,Inter,sans-serif;font-wei
 @media(max-width:1000px){.hero-note{width:185px}.hero-note p{font-size:18px}}
 @media(max-width:700px){.hero-note{width:185px}.hero-note p{font-size:18px}}
 @media(prefers-reduced-motion:reduce){.hero-photo,.hero-campaign,.academy-picture,.academy-tag,.page-cover{transition:none}.content-card:hover,.button:hover{transform:none}.hero-copy,.hero-photo,.hero-campaign{animation:none}}
+
+/* Six mission fields: balanced rows with room for readable descriptions. */
+.gopa_field{grid-template-columns:repeat(3,minmax(0,1fr));gap:24px}.gopa_field .card-image{aspect-ratio:1.35}.gopa_field .card-body{padding:28px 24px 24px}.gopa_field .card-body h3{font-size:32px}.gopa_field .card-body p{font-size:16px}.gopa_field .card-body .eyebrow{font-size:11px}.gopa_field .card-bottom{font-size:13px}
+@media(max-width:1000px){.gopa_field{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:700px){.gopa_field{gap:14px}.gopa_field .card-image,.gopa_field .content-card:last-child .card-image{aspect-ratio:1.02;height:auto}.gopa_field .card-body,.gopa_field .content-card:last-child .card-body{padding:20px 13px 16px}.gopa_field .card-body h3,.gopa_field .content-card:last-child .card-body h3{font-size:26px}.gopa_field .card-body p{font-size:14px}.gopa_field .card-body .eyebrow{font-size:9px}.gopa_field .card-bottom{font-size:11px}.gopa_field .content-card:last-child{grid-column:auto}.gopa_field .content-card:last-child .card-link{display:flex;flex-direction:column}}
+@media(max-width:360px){.gopa_field{grid-template-columns:1fr}}
