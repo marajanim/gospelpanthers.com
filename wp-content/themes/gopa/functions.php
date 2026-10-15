@@ -35,4 +35,5 @@ add_action('wp_head',function(){ printf('<style>:root{--gold:%s;--ink:%s;--paper
 require_once get_theme_file_path('inc/content-settings.php');
 require_once get_theme_file_path('inc/shortcodes.php');
 require_once get_theme_file_path('inc/commerce.php');
+require_once get_theme_file_path('inc/britain.php');
 
