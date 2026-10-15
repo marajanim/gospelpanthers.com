@@ -10,6 +10,30 @@ define('DISABLE_WP_CRON', true);
 define('FS_METHOD', 'direct');
 require $root.'/wp-load.php';
 if (!in_array(wp_parse_url(home_url(), PHP_URL_HOST), ['www.gospelpanthers.com','gospelpanthers.com','gopa.local'], true)) throw new RuntimeException('Unexpected WordPress site.');
+// Set the requested logo once through WordPress's native Site Icon setting.
+// Later admin changes remain authoritative.
+if (!get_option('gopa_logo_favicon_v1')) {
+    $logo_id = (int)get_theme_mod('custom_logo');
+    $source = $logo_id ? get_attached_file($logo_id) : get_theme_file_path('assets/logo.png');
+    $editor = wp_get_image_editor($source);
+    if (is_wp_error($editor)) throw new RuntimeException('Cannot prepare the logo site icon.');
+    $resized = $editor->resize(512, 512, true);
+    if (is_wp_error($resized)) throw new RuntimeException('Cannot resize the logo site icon.');
+    $uploads = wp_upload_dir();
+    if ($uploads['error']) throw new RuntimeException('Cannot access site icon uploads.');
+    $filename = wp_unique_filename($uploads['path'], 'gospel-panthers-site-icon.png');
+    $saved = $editor->save($uploads['path'].'/'.$filename, 'image/png');
+    if (is_wp_error($saved)) throw new RuntimeException('Cannot save the logo site icon.');
+    require_once ABSPATH.'wp-admin/includes/image.php';
+    foreach ([32,180,192,270] as $size) add_image_size('site_icon-'.$size, $size, $size, true);
+    $icon_id = wp_insert_attachment(['post_title'=>'Gospel Panthers site icon','post_mime_type'=>'image/png','post_status'=>'inherit'], $saved['path'], 0, true);
+    if (is_wp_error($icon_id)) throw new RuntimeException('Cannot add the site icon to the Media Library.');
+    wp_update_attachment_metadata($icon_id, wp_generate_attachment_metadata($icon_id, $saved['path']));
+    update_post_meta($icon_id, '_wp_attachment_image_alt', 'Gospel Panthers logo');
+    update_option('site_icon', $icon_id);
+    update_option('gopa_logo_favicon_v1', true, false);
+    echo "Gospel Panthers logo set as the WordPress site icon.\n";
+}
 if (get_option('gopa_store_ready') === '2026-10-v1') { echo "GOPA store migration already complete.\n"; exit; }
 require_once ABSPATH.'wp-admin/includes/admin.php';
 require_once ABSPATH.'wp-admin/includes/plugin.php';
