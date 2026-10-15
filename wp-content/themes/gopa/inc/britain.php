@@ -5,19 +5,13 @@ function gopa_britain_flag_url() {
 }
 add_action('customize_register', function ($customizer) {
     $customizer->add_setting('gopa_britain_flag_enabled', ['default'=>true,'sanitize_callback'=>'rest_sanitize_boolean']);
-    $customizer->add_control('gopa_britain_flag_enabled', ['section'=>'gopa_brand','label'=>'Show the Great Britain flag on the homepage','type'=>'checkbox']);
+    $customizer->add_control('gopa_britain_flag_enabled', ['section'=>'gopa_brand','label'=>'Show the British flag in the homepage photo collage','type'=>'checkbox']);
     $customizer->add_setting('gopa_britain_flag_image', ['default'=>get_theme_file_uri('assets/union-jack.svg'),'sanitize_callback'=>'esc_url_raw']);
     $customizer->add_control(new WP_Customize_Image_Control($customizer, 'gopa_britain_flag_image', ['section'=>'gopa_brand','label'=>'Homepage flag image']));
 });
-add_action('wp_enqueue_scripts', function () {
-    if (!is_front_page()) return;
-    $enabled = (bool)gopa_setting('britain_flag_enabled', true);
-    wp_add_inline_style('gopa-design', ':root{--gopa-britain-flag:url("'.esc_url(gopa_britain_flag_url()).'");--gopa-britain-opacity:'.($enabled?'0.23':'0').';}');
-    if ($enabled) wp_add_inline_style('gopa-design', '.home .hero{background:radial-gradient(ellipse at 87% 90%,#c8102e1c,transparent 42%),#07101e}.home .hero-baseline{border-bottom:3px solid;border-image:linear-gradient(90deg,#012169 0%,#012169 33.33%,#fff 33.33%,#fff 66.66%,#c8102e 66.66%) 1;}');
-}, 20);
-// Retain the client's editable hero wording; the flag is controlled in Customize.
+// Add the flag to the photo composition; all original pictures and text remain editable.
 add_filter('render_block_core/group', function ($html, $block) {
-    if (!is_front_page() || !gopa_setting('britain_flag_enabled', true) || !in_array('hero-copy', explode(' ', $block['attrs']['className'] ?? ''), true)) return $html;
-    $flag = '<img class="britain-flag" src="'.esc_url(gopa_britain_flag_url()).'" alt="Union Jack — Great Britain" width="44" height="22" decoding="async">';
-    return preg_replace_callback('/<p\b[^>]*class="[^"]*\beyebrow\b[^"]*"[^>]*>/', function ($match) use ($flag) { return $match[0].$flag; }, $html, 1);
+    if (!is_front_page() || !gopa_setting('britain_flag_enabled', true) || !in_array('hero-art', explode(' ', $block['attrs']['className'] ?? ''), true) || str_contains($html, 'hero-britain-flag')) return $html;
+    $flag='<figure class="hero-britain-flag"><img src="'.esc_url(gopa_britain_flag_url()).'" alt="Union Jack — Great Britain" width="180" height="90" decoding="async"></figure>';
+    return preg_replace_callback('/(<\/(?:div|section)>\s*)$/', function ($match) use ($flag) { return $flag.$match[0]; }, $html, 1);
 }, 10, 2);
