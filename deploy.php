@@ -22,6 +22,19 @@ function allowed(string $path): bool {
     return !str_contains($path, '..') && !str_contains($path, '\\') &&
         ($path === 'wp-content/mu-plugins/gopa-content.php' || str_starts_with($path, 'wp-content/themes/gopa/'));
 }
+function upgradeSite(string $target, string $repo): void {
+    $script = $target . '/wp-content/themes/gopa/inc/site-upgrade.php';
+    if (!is_file($script)) return;
+    $status = ['status'=>'ready','checked_at'=>gmdate('c')];
+    try { echo command([PHP_BINARY, $script, $target], $repo) . "\n"; }
+    catch (Throwable $error) {
+        // Optional store installation can be retried without rolling back unrelated theme updates.
+        $status['status'] = 'pending';
+        fwrite(STDERR, 'Store setup needs attention: ' . $error->getMessage() . "\n");
+        file_put_contents(dirname($repo) . '/gopa-store-setup.log', $error->getMessage() . "\n", FILE_APPEND);
+    }
+    file_put_contents($target . '/wp-content/themes/gopa/store-setup-status.json', json_encode($status));
+}
 function ensureDirectory(string $path): void {
     if (!is_dir($path) && !mkdir($path, 0755, true) && !is_dir($path)) { throw new RuntimeException('Cannot create directory.'); }
 }
@@ -65,9 +78,7 @@ try {
     $target = $realTarget;
     $previous = is_file($statePath) ? json_decode(file_get_contents($statePath), true, 512, JSON_THROW_ON_ERROR) : [];
     if (($previous['commit'] ?? '') === $commit) {
-        if (is_file($target . '/wp-content/themes/gopa/inc/site-upgrade.php')) {
-            echo command([PHP_BINARY, $target . '/wp-content/themes/gopa/inc/site-upgrade.php', $target], $repo) . "\n";
-        }
+        upgradeSite($target, $repo);
         exit;
     }
     $removed = array_values(array_filter(array_diff($previous['files'] ?? [], $files), 'allowed'));
@@ -87,9 +98,7 @@ try {
         if (is_file($destination) && !unlink($destination)) { throw new RuntimeException('Cannot remove an obsolete GOPA file.'); }
         $changed[] = $file;
     }
-    if (is_file($target . '/wp-content/themes/gopa/inc/site-upgrade.php')) {
-        echo command([PHP_BINARY, $target . '/wp-content/themes/gopa/inc/site-upgrade.php', $target], $repo) . "\n";
-    }
+    upgradeSite($target, $repo);
     $state = ['commit' => $commit, 'deployed_at' => gmdate('c'), 'files' => $files];
     $stateTemporary = $statePath . '.new';
     if (file_put_contents($stateTemporary, json_encode($state, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES)) === false || !rename($stateTemporary, $statePath)) {
