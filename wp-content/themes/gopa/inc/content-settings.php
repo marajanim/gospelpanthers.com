@@ -23,6 +23,12 @@ function gopa_content_fields(){
             'previous_label'=>['Pagination previous','Previous'], 'next_label'=>['Pagination next','Next'],
             'read_more'=>['Archive action','Read more'], 'search_title'=>['Search results heading','Search results'], 'news_title'=>['Default archive heading','News & stories'],
         ],
+        'Shop and giving'=>[
+            'shop_action'=>['Shop button','Browse the shop'], 'donation_action'=>['Donation button','Make a donation'],
+            'cart_action'=>['Basket button','Your basket'], 'shop_empty'=>['Empty shop message','New resources will be available here soon. Explore our free resource library below.'],
+            'donation_amount'=>['Donation amount label','Your donation'], 'donation_note'=>['Donation explanation','Choose a one-time gift of £1 or more. Your gift supports the Gospel mission.'],
+            'donation_continue'=>['Donation submit button','Continue to basket'],
+        ],
         'Enquiry forms'=>[
             'contact_eyebrow'=>['Small heading','Start a conversation'],
             'form_name'=>['Name field','Your name'], 'form_email'=>['Email field','Email address'],

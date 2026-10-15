@@ -28,3 +28,11 @@ Edit the theme or MU plugin, review the changes, then commit and push. Do not co
 ## Editing content
 
 Use WordPress admin for pages, images, menus, mission fields, Academy courses, events, resources and enquiries. Appearance > Website text & links controls shared labels. Appearance > Customize controls branding and contact settings.
+
+## Store and donations
+
+Events and Resources are separate pages and navigation entries. Resources links to the WooCommerce shop, donation page and basket alongside the free resource library. The original combined page remains in WordPress as a content backup and redirects to Events.
+
+The deployment runs an idempotent CLI migration to install WooCommerce and its official Stripe gateway from WordPress.org, preserve existing content while splitting the page, and create the shop, basket, checkout and one-time donation product. New store currency defaults to GBP. Existing store settings and existing destination pages are preserved.
+
+Connect Stripe in WooCommerce > Settings > Payments > Stripe. No payment credentials are stored in this repository. Payments are not ready until the site's Stripe account is connected and enabled. Add real products, prices, images and downloadable files in Products. No sample sale items are seeded. Donations accept a custom amount between 1 and 100,000 in the store currency and use WooCommerce checkout. Review the shop's shipping, tax, email and payment settings for the actual items before selling.

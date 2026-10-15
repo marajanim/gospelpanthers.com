@@ -2,6 +2,7 @@
 defined('ABSPATH') || exit;
 add_action('after_setup_theme', function () {
     add_theme_support('title-tag'); add_theme_support('post-thumbnails'); add_theme_support('custom-logo');
+    add_theme_support('woocommerce');
     add_theme_support('html5', ['search-form','gallery','caption','style','script']);
     add_theme_support('align-wide'); add_theme_support('responsive-embeds'); add_theme_support('editor-styles');
     add_post_type_support('page','excerpt');
@@ -33,4 +34,5 @@ add_action('customize_register', function ($c) {
 add_action('wp_head',function(){ printf('<style>:root{--gold:%s;--ink:%s;--paper:%s}</style>',esc_attr(gopa_setting('gold','#c9a45c')),esc_attr(gopa_setting('ink','#111511')),esc_attr(gopa_setting('paper','#f6f5ef'))); });
 require_once get_theme_file_path('inc/content-settings.php');
 require_once get_theme_file_path('inc/shortcodes.php');
+require_once get_theme_file_path('inc/commerce.php');
 

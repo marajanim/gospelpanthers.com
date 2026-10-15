@@ -64,7 +64,12 @@ try {
     if (!$realTarget || is_link($target) || !is_file($realTarget . '/wp-config.php')) { throw new RuntimeException('Expected production WordPress directory not found.'); }
     $target = $realTarget;
     $previous = is_file($statePath) ? json_decode(file_get_contents($statePath), true, 512, JSON_THROW_ON_ERROR) : [];
-    if (($previous['commit'] ?? '') === $commit) { exit; }
+    if (($previous['commit'] ?? '') === $commit) {
+        if (is_file($target . '/wp-content/themes/gopa/inc/site-upgrade.php')) {
+            echo command([PHP_BINARY, $target . '/wp-content/themes/gopa/inc/site-upgrade.php', $target], $repo) . "\n";
+        }
+        exit;
+    }
     $removed = array_values(array_filter(array_diff($previous['files'] ?? [], $files), 'allowed'));
     $backup = dirname($repo) . '/gopa-deploy-backups/' . gmdate('Ymd-His') . '-' . substr($commit, 0, 12);
     ensureDirectory($backup);
@@ -81,6 +86,9 @@ try {
         $destination = safeDestination($target, $file);
         if (is_file($destination) && !unlink($destination)) { throw new RuntimeException('Cannot remove an obsolete GOPA file.'); }
         $changed[] = $file;
+    }
+    if (is_file($target . '/wp-content/themes/gopa/inc/site-upgrade.php')) {
+        echo command([PHP_BINARY, $target . '/wp-content/themes/gopa/inc/site-upgrade.php', $target], $repo) . "\n";
     }
     $state = ['commit' => $commit, 'deployed_at' => gmdate('c'), 'files' => $files];
     $stateTemporary = $statePath . '.new';
