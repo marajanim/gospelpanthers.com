@@ -10,6 +10,11 @@ define('DISABLE_WP_CRON', true);
 define('FS_METHOD', 'direct');
 require $root.'/wp-load.php';
 if (!in_array(wp_parse_url(home_url(), PHP_URL_HOST), ['www.gospelpanthers.com','gospelpanthers.com','gopa.local'], true)) throw new RuntimeException('Unexpected WordPress site.');
+if (!get_option('gopa_facebook_page_v1')) {
+    set_theme_mod('gopa_facebook', 'https://www.facebook.com/share/1JPgvywZXK');
+    update_option('gopa_facebook_page_v1', true, false);
+    echo "Facebook page link updated.\n";
+}
 // Set the requested logo once through WordPress's native Site Icon setting.
 // Later admin changes remain authoritative.
 if (!get_option('gopa_logo_favicon_v1')) {
