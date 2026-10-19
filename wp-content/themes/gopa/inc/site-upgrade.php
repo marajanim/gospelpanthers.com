@@ -12,6 +12,8 @@ require $root.'/wp-load.php';
 if (!in_array(wp_parse_url(home_url(), PHP_URL_HOST), ['www.gospelpanthers.com','gospelpanthers.com','gopa.local'], true)) throw new RuntimeException('Unexpected WordPress site.');
 require_once __DIR__.'/about-upgrade.php';
 gopa_upgrade_about_page();
+require_once __DIR__.'/mission-cards-upgrade.php';
+gopa_upgrade_mission_cards();
 if (!get_option('gopa_facebook_page_v1')) {
     set_theme_mod('gopa_facebook', 'https://www.facebook.com/share/1JPgvywZXK');
     update_option('gopa_facebook_page_v1', true, false);

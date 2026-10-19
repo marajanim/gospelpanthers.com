@@ -37,4 +37,5 @@ require_once get_theme_file_path('inc/content-settings.php');
 require_once get_theme_file_path('inc/shortcodes.php');
 require_once get_theme_file_path('inc/commerce.php');
 require_once get_theme_file_path('inc/britain.php');
+require_once get_theme_file_path('inc/mission-cards.php');
 

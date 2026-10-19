@@ -3,6 +3,34 @@
  * Description: Permanent mission collections and private, admin-managed enquiries. Independent of the active theme.
  */
 defined('ABSPATH') || exit;
+add_action('init', function () {
+    register_post_type('gopa_mission_step', [
+        'labels'=>['name'=>'Our Mission cards','singular_name'=>'Mission card','add_new_item'=>'Add Mission card','edit_item'=>'Edit Mission card','all_items'=>'All Mission cards'],
+        'public'=>false,'show_ui'=>true,'show_in_rest'=>true,'menu_icon'=>'dashicons-megaphone',
+        'supports'=>['title','editor','page-attributes','revisions'],
+        'template'=>[['core/paragraph',['placeholder'=>'Describe this mission in one or two sentences.']]],
+    ]);
+});
+// New cards go at the end unless an editor chooses a different order.
+add_filter('wp_insert_post_data', function ($data, $postarr, $unsanitized, $update) {
+    if (!$update && $data['post_type']==='gopa_mission_step' && empty($data['menu_order'])) {
+        global $wpdb;
+        $last=(int)$wpdb->get_var($wpdb->prepare("SELECT MAX(menu_order) FROM {$wpdb->posts} WHERE post_type=%s AND post_status NOT IN ('trash','auto-draft')", 'gopa_mission_step'));
+        $data['menu_order']=$last+10;
+    }
+    return $data;
+}, 10, 4);
+add_filter('manage_gopa_mission_step_posts_columns', function ($columns) { $columns['gopa_order']='Display order'; return $columns; });
+add_action('manage_gopa_mission_step_posts_custom_column', function ($column, $id) { if($column==='gopa_order') echo (int)get_post_field('menu_order',$id); }, 10, 2);
+add_filter('manage_edit-gopa_mission_step_sortable_columns', function ($columns) { $columns['gopa_order']='menu_order'; return $columns; });
+add_action('pre_get_posts', function ($query) {
+    if (is_admin() && $query->is_main_query() && $query->get('post_type')==='gopa_mission_step' && !$query->get('orderby')) { $query->set('orderby',['menu_order'=>'ASC','ID'=>'ASC']); }
+});
+add_action('add_meta_boxes_gopa_mission_step', function () {
+    add_meta_box('gopa-mission-guide','About this mission card', function () {
+        echo '<p>The title is the card heading. Write the description in the editor, then Publish. It appears automatically in About Us → Our Mission.</p><p>Use <strong>Page Attributes → Order</strong> to change the sequence. New cards are added at the end. Set a card to Draft to hide it.</p>';
+    }, 'gopa_mission_step', 'side');
+});
 // Add the sixth field once, then leave all copy/images under normal admin control.
 add_action('init', function () {
     if (get_option('gopa_cyber_field_v1') || !post_type_exists('gopa_field')) return;
