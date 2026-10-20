@@ -35,7 +35,8 @@ body{background:var(--paper)}h1,h2,h3{font-family:Jost,Inter,sans-serif;font-wei
 @media(max-width:360px){.gopa_field{grid-template-columns:1fr}}
 
 /* The Union Jack belongs to the framed photo collage. */
-.hero-britain-flag{position:absolute;left:42%;top:-25px;width:180px;margin:0;border:5px solid #f1e9d9;border-radius:10px;overflow:hidden;background:#012169;box-shadow:0 12px 30px #0006;transform:rotate(-6deg);z-index:3;transition:transform .35s}.hero-britain-flag img{display:block;width:100%;height:auto;aspect-ratio:2;object-fit:contain}.hero-britain-flag:hover{transform:rotate(-3deg) translateY(-3px)}
-@media(max-width:1250px){.hero-britain-flag{width:165px}}
-@media(max-width:1000px){.hero-britain-flag{width:140px;top:-20px}}
-@media(max-width:700px){.hero-art{min-height:505px}.hero-campaign-back{top:100px}.hero-photo{top:165px}.hero-mark{top:90px}.hero-britain-flag{width:130px;left:calc(50% - 65px);top:0;border-width:4px;border-radius:8px}}
+.hero-britain-flag{position:absolute;left:32%;top:-75px;width:280px;margin:0;border:5px solid #f1e9d9;border-radius:10px;overflow:hidden;background:#012169;box-shadow:0 12px 30px #0006;transform:rotate(-6deg);z-index:3;transition:transform .35s}.hero-britain-flag img{display:block;width:100%;height:auto;aspect-ratio:2;object-fit:contain}.hero-britain-flag:hover{transform:rotate(-3deg) translateY(-3px)}
+@media(max-width:1250px){.hero-britain-flag{width:250px;left:29%}}
+@media(max-width:1000px){.hero-britain-flag{width:220px;left:25%;top:-65px}}
+@media(max-width:700px){.hero-art{min-height:505px}.hero-campaign-back{top:100px}.hero-photo{top:165px}.hero-mark{top:90px}.hero-britain-flag{width:210px;left:calc(50% - 105px);top:0;border-width:4px;border-radius:8px}}
+.gopa_field img[src*="gopa-cyber-discipleship"],.about-field-card img[src*="gopa-cyber-discipleship"]{object-fit:contain;background:#101d22}

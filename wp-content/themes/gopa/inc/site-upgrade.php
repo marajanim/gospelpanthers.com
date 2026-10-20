@@ -14,6 +14,8 @@ require_once __DIR__.'/about-upgrade.php';
 gopa_upgrade_about_page();
 require_once __DIR__.'/mission-cards-upgrade.php';
 gopa_upgrade_mission_cards();
+require_once __DIR__.'/cyber-image-upgrade.php';
+gopa_upgrade_cyber_image();
 if (!get_option('gopa_facebook_page_v1')) {
     set_theme_mod('gopa_facebook', 'https://www.facebook.com/share/1JPgvywZXK');
     update_option('gopa_facebook_page_v1', true, false);
