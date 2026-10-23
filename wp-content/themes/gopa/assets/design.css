@@ -40,3 +40,4 @@ body{background:var(--paper)}h1,h2,h3{font-family:Jost,Inter,sans-serif;font-wei
 @media(max-width:1000px){.hero-britain-flag{width:220px;left:25%;top:-65px}}
 @media(max-width:700px){.hero-art{min-height:505px}.hero-campaign-back{top:100px}.hero-photo{top:165px}.hero-mark{top:90px}.hero-britain-flag{width:210px;left:calc(50% - 105px);top:0;border-width:4px;border-radius:8px}}
 .gopa_field img[src*="gopa-cyber-discipleship"],.about-field-card img[src*="gopa-cyber-discipleship"]{object-fit:contain;background:#101d22}
+.gopa_event img[src*="gopa-event-imec"],.gopa_event img[src*="gopa-event-gratitude"]{object-fit:contain;background:#101b20}
