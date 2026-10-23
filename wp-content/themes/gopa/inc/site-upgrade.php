@@ -19,6 +19,7 @@ gopa_upgrade_cyber_image();
 require_once __DIR__.'/events-october-upgrade.php';
 gopa_upgrade_additional_events();
 gopa_upgrade_event_descriptions();
+gopa_upgrade_events_banner();
 if (!get_option('gopa_facebook_page_v1')) {
     set_theme_mod('gopa_facebook', 'https://www.facebook.com/share/1JPgvywZXK');
     update_option('gopa_facebook_page_v1', true, false);

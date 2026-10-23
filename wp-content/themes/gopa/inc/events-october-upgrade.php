@@ -75,3 +75,23 @@ function gopa_upgrade_event_descriptions() {
     update_option('gopa_event_descriptions_v1',true,false);
     echo "Client event descriptions published in cards and event pages.\n";
 }
+function gopa_upgrade_events_banner() {
+    if (get_option('gopa_events_banner_v1')) return;
+    $page=get_page_by_path('events');
+    if (!$page) throw new RuntimeException('Events page required before updating banner.');
+    $images=get_posts(['post_type'=>'attachment','post_status'=>'inherit','numberposts'=>1,'meta_key'=>'_gopa_events_banner_v1','meta_value'=>'1']);
+    $id=$images ? $images[0]->ID : 0;
+    if (!$id) {
+        $upload=wp_upload_bits('gopa-events-banner.png',null,file_get_contents(get_theme_file_path('assets/gopa-events-banner.png')));
+        if ($upload['error']) throw new RuntimeException($upload['error']);
+        $id=wp_insert_attachment(['post_title'=>'Events — Gospel Panthers of Great Britain','post_mime_type'=>'image/png','post_status'=>'inherit','meta_input'=>['_gopa_events_banner_v1'=>'1']],$upload['file'],0,true);
+        if (is_wp_error($id)) throw new RuntimeException($id->get_error_message());
+        require_once ABSPATH.'wp-admin/includes/image.php';
+        wp_update_attachment_metadata($id,wp_generate_attachment_metadata($id,$upload['file']));
+        update_post_meta($id,'_wp_attachment_image_alt','Events: Gospel Panthers of Great Britain — worshippers gathered in praise');
+    }
+    update_post_meta($page->ID,'_gopa_previous_events_banner',get_post_thumbnail_id($page->ID));
+    set_post_thumbnail($page->ID,$id);
+    update_option('gopa_events_banner_v1',true,false);
+    echo "Events page banner replaced with the supplied artwork.\n";
+}
