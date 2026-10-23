@@ -49,3 +49,29 @@ function gopa_upgrade_additional_events() {
     update_option('gopa_additional_events_v1',true,false);
     echo "iMEC and Night of Gratitude added to the editable Events collection.\n";
 }
+function gopa_upgrade_event_descriptions() {
+    if (get_option('gopa_event_descriptions_v1')) return;
+    $events=[
+        'night-of-gratitude'=>['title'=>'Night of Gratitude','description'=>'Powerful gathering bringing together worshippers from across the UK to celebrate God’s faithfulness and goodness, and appreciate the Ministers of God who have contributed immensely towards the work of God.'],
+        'imec-international-missionaries-evangelists-conference'=>['title'=>'International Missionaries & Evangelists Conference (iMEC)','description'=>'This transformative gathering convenes church leaders, evangelists, missionaries, and passionate believers from around the world to inspire them to take the Gospel to the nations.'],
+    ];
+    foreach ($events as $slug=>$event) {
+        $post=get_page_by_path($slug,OBJECT,'gopa_event');
+        if (!$post) throw new RuntimeException('Event required before updating its description.');
+        if (get_post_meta($post->ID,'_gopa_event_description_v1',true)) continue;
+        $blocks=parse_blocks($post->post_content); $replaced=false;
+        foreach ($blocks as &$block) {
+            if ($block['blockName']!=='core/paragraph') continue;
+            $block=parse_blocks('<!-- wp:paragraph --><p>'.esc_html($event['description']).'</p><!-- /wp:paragraph -->')[0];
+            $replaced=true; break;
+        }
+        unset($block);
+        if (!$replaced) throw new RuntimeException('Event description paragraph needs review.');
+        wp_save_post_revision($post->ID);
+        $saved=wp_update_post(['ID'=>$post->ID,'post_title'=>wp_slash($event['title']),'post_excerpt'=>wp_slash($event['description']),'post_content'=>wp_slash(serialize_blocks($blocks))],true);
+        if (is_wp_error($saved)) throw new RuntimeException($saved->get_error_message());
+        update_post_meta($post->ID,'_gopa_event_description_v1',true);
+    }
+    update_option('gopa_event_descriptions_v1',true,false);
+    echo "Client event descriptions published in cards and event pages.\n";
+}
